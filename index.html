@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kahootrix — Challenge Your Brain</title>
+  <meta name="description" content="Kahootrix is an interactive trivia quiz game with 8 categories, 3 difficulty levels, achievements, XP and a local leaderboard.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Animated background -->
+  <div class="bg" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <a href="#" class="logo" data-nav="home" aria-label="Kahootrix home">
+      <span class="logo-icon"></span>
+      <span class="logo-text">Kahootrix</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <button class="nav-link active" data-nav="home">Home</button>
+      <button class="nav-link" data-nav="setup">Play</button>
+      <button class="nav-link" data-nav="leaderboard">Leaderboard</button>
+      <button class="nav-link" data-nav="profile">Profile</button>
+    </nav>
+    <div class="header-actions">
+      <div class="player-chip" id="playerChip" title="Change display name" role="button" tabindex="0">
+        <span class="avatar" id="playerAvatar">?</span>
+        <span class="chip-text">
+          <strong id="playerNameDisplay">Player</strong>
+          <small>Lv <span id="playerLevel">1</span></small>
+        </span>
+      </div>
+      <button class="icon-btn" id="soundToggle" aria-label="Toggle sound" title="Sound on/off">🔊</button>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme" title="Light/Dark theme">🌙</button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- ================= HOME ================= -->
+    <section class="screen active" id="screen-home">
+      <div class="hero">
+        <div class="hero-content">
+          <span class="badge-pill">🎮 Free to play • No sign-up</span>
+          <h1 class="hero-title">Challenge Your Brain.<br><span class="gradient-text">Test Your Knowledge!</span></h1>
+          <p class="hero-sub">Dive into 8 exciting categories, race the clock, build streaks, unlock achievements and climb the leaderboard. How far can your brain take you?</p>
+          <div class="hero-cta">
+            <button class="btn btn-primary btn-lg pulse" data-nav="setup">▶ PLAY NOW</button>
+            <button class="btn btn-ghost btn-lg" id="dailyBtn"> Daily Challenge</button>
+            <button class="btn btn-ghost btn-lg" id="randomBtn"> Random Mode</button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat"><strong id="statQuestions">0</strong><span>Questions</span></div>
+            <div class="stat"><strong>8</strong><span>Categories</span></div>
+            <div class="stat"><strong>3</strong><span>Difficulties</span></div>
+            <div class="stat"><strong id="statBest">0</strong><span>Your Best</span></div>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="float-card fc-1"><small>Science</small></div>
+          <div class="float-card fc-2"><small>Geography</small></div>
+          <div class="float-card fc-3"><small>+30 pts</small></div>
+          <div class="hero-orb"></div>
+          <div class="hero-ring"></div>
+        </div>
+      </div>
+
+      <!-- Daily challenge banner -->
+      <div class="glass daily-banner" id="dailyBanner">
+        <div>
+          <h3>Daily Trivia Challenge</h3>
+          <p id="dailyText">10 mixed questions, the same for everyone today. One attempt per day!</p>
+        </div>
+        <button class="btn btn-secondary" id="dailyBtn2">Start Today's Challenge</button>
+      </div>
+
+      <!-- Categories preview -->
+      <h2 class="section-title">Pick Your <span class="gradient-text">Arena</span></h2>
+      <p class="section-sub">Each category offers Easy, Medium and Hard levels with 10 questions per round.</p>
+      <div class="category-grid" id="homeCategories"></div>
+
+      <!-- Difficulty info -->
+      <div class="difficulty-info">
+        <div class="glass diff-card easy"><h4>Easy</h4><p>20s per question<br><strong>10 pts</strong> per correct</p></div>
+        <div class="glass diff-card medium"><h4>Medium</h4><p>15s per question<br><strong>20 pts</strong> per correct</p></div>
+        <div class="glass diff-card hard"><h4>Hard</h4><p>10s per question<br><strong>30 pts</strong> per correct</p></div>
+      </div>
+
+      <!-- Leaderboard preview -->
+      <div class="glass leaderboard-preview">
+        <div class="lb-head">
+          <h3>🏆 Top Players</h3>
+          <button class="btn btn-ghost btn-sm" data-nav="leaderboard">View All</button>
+        </div>
+        <ol class="lb-list" id="homeLeaderboard"></ol>
+        <p class="local-note">Local leaderboard — scores are stored only in this browser.</p>
+      </div>
+    </section>
+
+    <!-- ================= SETUP ================= -->
+    <section class="screen" id="screen-setup">
+      <h2 class="section-title">Choose a <span class="gradient-text">Category</span></h2>
+      <p class="section-sub">Select a category and a difficulty, then launch your quest.</p>
+      <div class="category-grid selectable" id="setupCategories"></div>
+
+      <h3 class="section-title small">Select <span class="gradient-text">Difficulty</span></h3>
+      <div class="difficulty-select" id="difficultySelect">
+        <button class="diff-btn easy active" data-diff="easy"><span>🟢 Easy</span><small>10 pts • 20s</small></button>
+        <button class="diff-btn medium" data-diff="medium"><span>🟡 Medium</span><small>20 pts • 15s</small></button>
+        <button class="diff-btn hard" data-diff="hard"><span>🔴 Hard</span><small>30 pts • 10s</small></button>
+      </div>
+
+      <div class="setup-summary glass">
+        <div>
+          <p>Selected: <strong id="setupSummary">General Knowledge • Easy</strong></p>
+          <small>10 questions • Lifelines: 1 Hint + 1 Fifty-Fifty</small>
+        </div>
+        <button class="btn btn-primary btn-lg" id="startQuizBtn">Start Quiz</button>
+      </div>
+    </section>
+
+    <!-- ================= COUNTDOWN ================= -->
+    <section class="screen" id="screen-countdown">
+      <div class="countdown-wrap">
+        <p class="countdown-label" id="countdownLabel">Get ready…</p>
+        <div class="countdown-number" id="countdownNumber">3</div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="screen" id="screen-quiz">
+      <div class="quiz-wrap">
+        <div class="quiz-top">
+          <div class="quiz-meta">
+            <span class="tag" id="quizCategoryTag">Science</span>
+            <span class="tag diff" id="quizDiffTag">Easy</span>
+          </div>
+          <div class="quiz-stats">
+            <div class="qs"><small>Score</small><strong id="quizScore">0</strong></div>
+            <div class="qs"><small>Streak</small><strong id="quizStreak">🔥 0</strong></div>
+            <button class="icon-btn" id="pauseBtn" aria-label="Pause quiz" title="Pause">⏸</button>
+            <button class="icon-btn danger" id="quitBtn" aria-label="Quit quiz" title="Quit">✕</button>
+          </div>
+        </div>
+
+        <div class="progress-row">
+          <span id="questionCounter">Question 1 of 10</span>
+          <div class="timer" id="timerWrap">
+            <svg viewBox="0 0 40 40"><circle class="track" cx="20" cy="20" r="17"/><circle class="bar" id="timerCircle" cx="20" cy="20" r="17"/></svg>
+            <span id="timerText">20</span>
+          </div>
+        </div>
+        <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+        <div class="glass question-card" id="questionCard">
+          <h2 class="question-text" id="questionText">Loading…</h2>
+          <div class="answers" id="answers"></div>
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+        </div>
+
+        <div class="lifelines">
+          <button class="btn btn-ghost" id="hintBtn">Hint <small>(remove 1)</small></button>
+          <button class="btn btn-ghost" id="fiftyBtn">➗ 50 : 50</button>
+        </div>
+      </div>
+
+      <!-- Pause overlay -->
+      <div class="overlay" id="pauseOverlay">
+        <div class="glass modal">
+          <h2>⏸ Paused</h2>
+          <p>Take a breath. The timer is stopped.</p>
+          <div class="modal-actions">
+            <button class="btn btn-primary" id="resumeBtn">▶ Resume</button>
+            <button class="btn btn-ghost" id="pauseQuitBtn">Quit Quiz</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RESULTS ================= -->
+    <section class="screen" id="screen-results">
+      <div class="results-wrap">
+        <div class="glass results-card">
+          <p class="results-label" id="resultsLabel">Quiz Complete!</p>
+          <div class="results-score"><span id="finalScore">0</span><small>points</small></div>
+          <div class="rating" id="rating">⭐⭐⭐</div>
+          <p class="results-message" id="resultsMessage"></p>
+          <p class="new-high" id="newHigh" hidden>NEW HIGH SCORE!</p>
+
+          <div class="results-grid">
+            <div class="r-stat"><strong id="rCorrect">0</strong><span>Correct</span></div>
+            <div class="r-stat"><strong id="rWrong">0</strong><span>Incorrect</span></div>
+            <div class="r-stat"><strong id="rAccuracy">0%</strong><span>Accuracy</span></div>
+            <div class="r-stat"><strong id="rTime">0s</strong><span>Time</span></div>
+            <div class="r-stat"><strong id="rStreak">0</strong><span>Best Streak</span></div>
+            <div class="r-stat"><strong id="rXP">+0</strong><span>XP Earned</span></div>
+          </div>
+
+          <div class="xp-bar-wrap">
+            <div class="xp-labels"><span>Level <b id="rLevel">1</b></span><span id="rXPText">0 / 100 XP</span></div>
+            <div class="xp-bar"><div class="xp-fill" id="rXPFill"></div></div>
+          </div>
+
+          <div class="new-achievements" id="newAchievements"></div>
+
+          <div class="results-actions">
+            <button class="btn btn-secondary" id="reviewBtn">Review Answers</button>
+            <button class="btn btn-primary" id="playAgainBtn">Play Again</button>
+            <button class="btn btn-ghost" data-nav="home">Back to Home</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REVIEW ================= -->
+    <section class="screen" id="screen-review">
+      <h2 class="section-title">Answer <span class="gradient-text">Review</span></h2>
+      <p class="section-sub">See what you got right and learn from the rest.</p>
+      <div class="review-list" id="reviewList"></div>
+      <div class="center"><button class="btn btn-primary" id="reviewBackBtn">← Back to Results</button></div>
+    </section>
+
+    <!-- ================= LEADERBOARD ================= -->
+    <section class="screen" id="screen-leaderboard">
+      <h2 class="section-title"><span class="gradient-text">Leaderboard</span></h2>
+      <p class="section-sub">This is a <strong>local leaderboard</strong> stored in your current browser only — not a global ranking.</p>
+      <div class="glass lb-full">
+        <div class="lb-filters">
+          <select id="lbFilter" aria-label="Filter leaderboard">
+            <option value="all">All categories</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" id="clearLbBtn">Clear scores</button>
+        </div>
+        <ol class="lb-list big" id="fullLeaderboard"></ol>
+      </div>
+    </section>
+
+    <!-- ================= PROFILE / ACHIEVEMENTS ================= -->
+    <section class="screen" id="screen-profile">
+      <h2 class="section-title">Your <span class="gradient-text">Profile</span></h2>
+      <div class="profile-grid">
+        <div class="glass profile-card">
+          <div class="avatar big" id="profileAvatar">?</div>
+          <h3 id="profileName">Player</h3>
+          <button class="btn btn-ghost btn-sm" id="changeNameBtn">Change name</button>
+          <div class="xp-bar-wrap">
+            <div class="xp-labels"><span>Level <b id="pLevel">1</b></span><span id="pXPText">0 / 100 XP</span></div>
+            <div class="xp-bar"><div class="xp-fill" id="pXPFill"></div></div>
+          </div>
+          <div class="results-grid compact">
+            <div class="r-stat"><strong id="pGames">0</strong><span>Games</span></div>
+            <div class="r-stat"><strong id="pBest">0</strong><span>Best Score</span></div>
+            <div class="r-stat"><strong id="pCorrect">0</strong><span>Correct</span></div>
+            <div class="r-stat"><strong id="pStreak">0</strong><span>Best Streak</span></div>
+          </div>
+          <button class="btn btn-ghost btn-sm danger-text" id="resetProgressBtn">Reset all progress</button>
+        </div>
+        <div class="glass achievements-card">
+          <h3>Achievements <small id="achCount">0 / 0</small></h3>
+          <div class="achievements-grid" id="achievementsGrid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Kahootrix</p>
+  </footer>
+
+  <!-- Name modal -->
+  <div class="overlay" id="nameModal">
+    <div class="glass modal">
+      <h2>Welcome, Challenger!</h2>
+      <p>Enter a display name for the leaderboard.</p>
+      <input type="text" id="nameInput" maxlength="16" placeholder="Your name" autocomplete="off" aria-label="Display name">
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="saveNameBtn">Let's Go!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm leave modal -->
+  <div class="overlay" id="confirmModal">
+    <div class="glass modal">
+      <h2>⚠️ Leave quiz?</h2>
+      <p>Your current progress will be lost. Are you sure?</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="confirmStay">Stay</button>
+        <button class="btn btn-danger" id="confirmLeave">Leave</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
