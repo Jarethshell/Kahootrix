@@ -205,3 +205,10 @@ Sound effects and confetti gracefully degrade when the browser does not support 
 No license has been specified for this project yet. Add a license file before distributing or reusing the code publicly.
 
 Hayden x Jareth Copyrights
+
+## Screenshots
+
+<img width="1920" height="1080" alt="Screenshot From 2026-11-24 18-01-35" src="https://github.com/user-attachments/assets/748055cc-11ab-45bb-a25b-6c3d4ecce3ef" />
+<img width="1920" height="1080" alt="Screenshot From 2026-11-24 18-01-30" src="https://github.com/user-attachments/assets/f6605afe-6656-4e41-b7e2-5e7374c0137b" />
+<img width="1920" height="1080" alt="Screenshot From 2026-11-24 18-01-18" src="https://github.com/user-attachments/assets/8aa2399d-b17a-4efa-b3c4-880ecf063454" />
+<img width="1920" height="1080" alt="Screenshot From 2026-11-24 18-01-10" src="https://github.com/user-attachments/assets/4a8f7ef3-51d4-46dc-bec7-6b49fd7e7e80" />
